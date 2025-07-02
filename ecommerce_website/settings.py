@@ -82,12 +82,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'ecommerce_website',  # Replace with actual password
-        'HOST': 'db.xqbjtrlvetzmmwxfboov.supabase.co',
+        'USER': 'postgres.xqbjtrlvetzmmwxfboov',  # Full Supabase user from pooled URL
+        'PASSWORD': 'ecommerce_website',  # Replace with your actual password
+        'HOST': 'aws-0-ap-south-1.pooler.supabase.com',  # New pooled host
         'PORT': '5432',
     }
 }
+
 
 
 
