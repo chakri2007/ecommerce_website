@@ -24,7 +24,7 @@ def signup_user(request):
 
         user = User.objects.create_user(
             username=contact,
-            email=contact if '@' in contact else '',
+            email=contact,
             password=password,
             first_name=first_name,
             last_name=last_name,
