@@ -139,7 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = ['accounts.backends.EmailOrPhoneBackend']
 
 SUPABASE_URL = 'https://xqbjtrlvetzmmwxfboov.supabase.co'
-SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxYmp0cmx2ZXR6bW13eGZib292Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzOTUyNzYsImV4cCI6MjA2Njk3MTI3Nn0.jjfoJLuDwl6IRssvWoSrRMXq55smkAooCRVcqCZEeGU'
+SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxYmp0cmx2ZXR6bW13eGZib292Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTM5NTI3NiwiZXhwIjoyMDY2OTcxMjc2fQ.zdXhjOBfxx3zmhpqEsN6lrqDTymUNpUb90FqpVyHy60'
 SUPABASE_BUCKET = 'products-images'
 
 
