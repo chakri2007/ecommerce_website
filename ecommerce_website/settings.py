@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+    'products',
 ]
 
 MIDDLEWARE = [
@@ -136,4 +137,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = ['accounts.backends.EmailOrPhoneBackend']
+
+SUPABASE_URL = 'https://xqbjtrlvetzmmwxfboov.supabase.co'
+SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxYmp0cmx2ZXR6bW13eGZib292Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzOTUyNzYsImV4cCI6MjA2Njk3MTI3Nn0.jjfoJLuDwl6IRssvWoSrRMXq55smkAooCRVcqCZEeGU'
+SUPABASE_BUCKET = 'products-images'
+
 

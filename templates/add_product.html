@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Selling Object</title>
+    <link rel="stylesheet" href="{% static 'auth/css/styles.css' %}">
+    <style>
+        .sell-form {
+            width: 260px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .sell-form input, .sell-form textarea {
+            display: block;
+            width: 100%;
+            margin-top: 5px;
+            padding-bottom: 5px;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+            font-family: 'Open Sans', sans-serif;
+        }
+        .sell-form input[type="file"] {
+            border-bottom: none;
+            padding-top: 5px;
+        }
+        .sell-form button {
+            margin-top: 20px;
+            background: #d4af7a;
+            color: #fff;
+            border-radius: 30px;
+            width: 100%;
+            height: 36px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="sell-form">
+        <h2>Add Your Product</h2>
+        <form method="POST" action="{% url 'add_selling_object' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label>
+                <span>Product Name</span>
+                <input type="text" name="name" required>
+            </label>
+            <label>
+                <span>Price ($)</span>
+                <input type="number" name="price" step="0.01" min="0.01" required>
+            </label>
+            <label>
+                <span>Description</span>
+                <textarea name="description"></textarea>
+            </label>
+            <label>
+                <span>Stock</span>
+                <input type="number" name="stock" min="0" value="1">
+            </label>
+            <label>
+                <span>Product Image</span>
+                <input type="file" name="image" accept="image/jpeg,image/png,image/gif">
+            </label>
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+</body>
+</html>
