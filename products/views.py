@@ -93,3 +93,10 @@ def add_selling_object(request):
         }, status=201)
 
     return JsonResponse({'message': 'Invalid method'}, status=405)
+
+@login_required
+def product_list(request):
+    # Get all products where product.user == current logged-in user
+    user_products = Product.objects.filter(user=request.user)
+    return render(request, 'product_list.html', {'products': user_products})
+
