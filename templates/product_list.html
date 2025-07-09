@@ -951,11 +951,19 @@
               </div>
             </div>
             <div>
-                <button
-                  class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                >
-                  Add Product
-                </button>
+                <a href="{% url 'add_product_page' %}">
+    <button
+        type="button"
+        class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+    >
+        Add Product
+    </button>
+</a>
+
+
+
+
+
                 <br>
                 <br>
             
@@ -1008,15 +1016,32 @@
             {% endif %}
           </td>
           <td class="px-4 py-3 text-xs">
-            <span class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-700 dark:text-black-700">
-              <button style="margin-right: 10px;">EDIT</button>
-            </span>
-          </td>
-          <td class="px-4 py-3 text-xs">
-            <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
-              <button style="margin-right: 10px;">DELETE</button>
-            </span>
-          </td>
+    <span>
+        <button 
+            class="edit-button px-2 py-1 font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            data-product-id="{{ product.id }}"
+            data-product-name="{{ product.name }}"
+            data-product-price="{{ product.price }}"
+            data-product-stock="{{ product.stock }}"
+            data-product-description="{{ product.description|default_if_none:'' }}"
+        >
+            EDIT
+        </button>
+    </span>
+</td>
+
+<td class="px-4 py-3 text-xs">
+    <span>
+        <button 
+            class="delete-button px-2 py-1 font-semibold text-white bg-red-600 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+            data-product-id="{{ product.id }}"
+        >
+            DELETE
+        </button>
+    </span>
+</td>
+
+
         </tr>
         {% empty %}
         <tr>
@@ -1078,5 +1103,137 @@
         </main>
       </div>
     </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.delete-button');
+
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            if (!confirm("Are you sure you want to delete this product?")) {
+                return;
+            }
+
+            const productId = this.getAttribute('data-product-id');
+
+            fetch(`/products/delete_product/${productId}/`, {  // ✅ fixed URL
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.Success) {
+                    alert(data.Success);
+                    this.closest('tr').remove();
+                } else {
+                    alert(data.Warn || data.Error || 'Failed to delete product.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the product.');
+            });
+        });
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const editModal = document.getElementById('editModal');
+    const editForm = document.getElementById('editForm');
+
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', () => {
+            document.getElementById('editProductId').value = button.dataset.productId;
+            document.getElementById('editProductName').value = button.dataset.productName;
+            document.getElementById('editProductPrice').value = button.dataset.productPrice;
+            document.getElementById('editProductStock').value = button.dataset.productStock;
+            document.getElementById('editProductDescription').value = button.dataset.productDescription;
+            editModal.classList.remove('hidden');
+            editModal.classList.add('flex');
+        });
+    });
+
+    document.getElementById('cancelEdit').addEventListener('click', () => {
+        editModal.classList.add('hidden');
+    });
+
+    editForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const productId = document.getElementById('editProductId').value;
+        const name = document.getElementById('editProductName').value;
+        const price = document.getElementById('editProductPrice').value;
+        const stock = document.getElementById('editProductStock').value;
+        const description = document.getElementById('editProductDescription').value;
+
+        fetch(`/products/edit_product/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'name': name,
+                'price': price,
+                'stock': stock,
+                'description': description
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.Success) {
+                alert('Product updated successfully.');
+                window.location.reload();
+            } else {
+                alert(data.Warn || data.Error || 'Failed to update product.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the product.');
+        });
+    });
+});
+</script>
+
+<!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-80">
+        <h2 class="text-lg font-bold mb-4">Edit Product</h2>
+        <form id="editForm">
+            <input type="hidden" id="editProductId">
+            <div class="mb-2">
+                <label class="block text-sm">Name:</label>
+                <input type="text" id="editProductName" class="w-full border rounded p-1">
+            </div>
+            <div class="mb-2">
+                <label class="block text-sm">Price:</label>
+                <input type="number" step="0.01" id="editProductPrice" class="w-full border rounded p-1">
+            </div>
+            <div class="mb-2">
+                <label class="block text-sm">Stock:</label>
+                <input type="number" id="editProductStock" class="w-full border rounded p-1">
+            </div>
+            <div class="mb-2">
+                <label class="block text-sm">Description:</label>
+                <textarea id="editProductDescription" class="w-full border rounded p-1"></textarea>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" id="cancelEdit" class="px-3 py-1 bg-gray-500 text-white rounded">Cancel</button>
+                <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
   </body>
 </html>
